@@ -1,0 +1,6 @@
+playwright
+faster-whisper
+soundcard
+numpy
+pyttsx3
+openai
