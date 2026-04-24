@@ -4,3 +4,4 @@ soundcard
 numpy
 pyttsx3
 openai
+python-dotenv

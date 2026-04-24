@@ -1,29 +1,50 @@
-from playwright.sync_api import sync_playwright
-from config import MEETING_LINK, BOT_NAME
+import shutil
+import subprocess
+
+from config import BOT_PROFILE_DIR, CHROME_PATH, MEETING_LINK
+
+
+def _resolve_chrome_path():
+    if CHROME_PATH:
+        return CHROME_PATH
+
+    candidates = [
+        shutil.which("chrome"),
+        shutil.which("chrome.exe"),
+        r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+        r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+    ]
+
+    for candidate in candidates:
+        if candidate:
+            return candidate
+
+    return None
 
 def join_meeting():
-    p = sync_playwright().start()
+    if not MEETING_LINK:
+        print("MEETING_LINK is empty. Set it in .env or config.py.")
+        return False
 
-    browser = p.chromium.launch(
-        headless=False,
-        args=['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream'])
-    context = browser.new_context()
-    page = context.new_page()
-    page.goto(MEETING_LINK)
-    input("Login manually and press Enter to continue...")
-
-    try:
-        page.fill('input[type="text"]', BOT_NAME)
-    except:
-        pass
-
-    try:
-        page.click('text=Join now', timeout=10000)
-    except:
+    chrome_path = _resolve_chrome_path()
+    if chrome_path:
+        print("Opening Google Meet in Chrome with bot profile...")
         try:
-            page.click('text=Ask to join', timeout=10000)
-        except:
-            print("Could not find 'Join now' or 'Ask to join' button. Please join the meeting manually.")
-    
-    print("Joined the meeting successfully!")
-    return browser,page
+            subprocess.Popen(
+                [chrome_path, f"--user-data-dir={BOT_PROFILE_DIR}", MEETING_LINK],
+                shell=False,
+            )
+        except Exception as exc:
+            print(f"Could not launch Chrome profile mode: {exc}")
+            return False
+    else:
+        print("Chrome not found automatically. Install Chrome or set CHROME_PATH in .env.")
+        return False
+
+    answer = input("Join/admit in that Chrome window, then type 'y' and press Enter to continue: ").strip().lower()
+    if answer != "y":
+        print("Meeting join not confirmed.")
+        return False
+
+    print("Meeting join confirmed.")
+    return True
