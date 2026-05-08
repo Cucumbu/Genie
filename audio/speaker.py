@@ -1,11 +1,16 @@
 import pyttsx3
 
+from config import TTS_ENABLED
+
 engine = None
 tts_available = True
 
 
 def _get_engine():
     global engine, tts_available
+
+    if not TTS_ENABLED:
+        return None
 
     if not tts_available:
         return None

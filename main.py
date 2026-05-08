@@ -2,7 +2,7 @@ import threading
 from datetime import datetime
 from pathlib import Path
 
-from meeting.join import join_meeting
+from meeting.join import cleanup_guest_session, join_meeting
 from audio.listener import listen, preload_model
 from audio.speaker import speak
 from ai.wakeword import is_called, extract_query
@@ -70,6 +70,7 @@ def main():
         print("Interrupted by user. Finishing up...")
     finally:
         save_notes(conversation_context)
+        cleanup_guest_session()
 
 if __name__ == "__main__":
     main()

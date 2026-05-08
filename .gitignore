@@ -1,3 +1,8 @@
 .env
 /meeting
 /__pycache__
+/.vscode
+/notes
+/ai
+/.bot_chrome_profile
+/audio/__pycache__
