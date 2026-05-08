@@ -1,7 +1,6 @@
 import warnings
 import threading
 import time
-import soundcard as sc
 import numpy as np
 from config import (
     AUDIO_SOURCE,
@@ -29,11 +28,13 @@ warnings.filterwarnings(
 _whisper_model = None   
 
 def _get_recorder_source():
+    import soundcard as sc
     if AUDIO_SOURCE == "microphone":
         microphone= sc.default_microphone()
         print(f"Listening from microphone: {microphone.name}")
         return microphone
     speaker = sc.default_speaker()
+
     try:
         loopback = sc.get_microphone(str(speaker.name), include_loopback=True)
         print(f"Listening from speaker loopback: {speaker.name}")
@@ -69,10 +70,17 @@ def _get_whisper_model():
     return _whisper_model
 
 def preload_model():
-    try:
-        _get_whisper_model()
-    except Exception as exc:
-        print(f"Speech model preload failed: {exc}")
+    if STT_PROVIDER == "azure":
+        print("Using Azure Speech for STT. No local model to preload.")
+        return
+    
+    if STT_PROVIDER == "whisper":
+        try:
+            _get_whisper_model()
+        except Exception as exc:
+            print(f"Failed to load Whisper model: {exc}")
+        return
+    print(f"Unknown STT_PROVIDER={STT_PROVIDER}. No model to preload.")
 
 def _listen_with_whisper(callback):
     recorder_source = _get_recorder_source()
@@ -104,6 +112,7 @@ def _listen_with_whisper(callback):
                     if should_continue is False:
                         print("Stopping listener...")
                         return
+                    
 def _listen_with_azure(callback):
     if not AZURE_SPEECH_KEY or not AZURE_SPEECH_REGION:
         raise RuntimeError("Azure Speech key and region must be set for Azure STT.")

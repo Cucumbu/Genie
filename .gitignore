@@ -1,8 +1,9 @@
 .env
-/meeting
-/__pycache__
-/.vscode
-/notes
-/ai
-/.bot_chrome_profile
-/audio/__pycache__
+__pycache__/
+*.pyc
+.vscode/
+notes/
+.bot_chrome_profile/
+*.wav
+*.mp3
+*.log

@@ -32,3 +32,5 @@ API_KEY = os.getenv("AZURE_OPENAI_KEY", "")
 BASE_URL = os.getenv("AZURE_OPENAI_ENDPOINT", "")
 MODEL_NAME = os.getenv("AZURE_OPENAI_DEPLOYMENT", "gpt-4o")
 AZURE_API_VERSION = os.getenv("AZURE_API_VERSION", "2024-02-01")
+CHAT_REPLY_ENABLED = os.getenv("CHAT_REPLY_ENABLED", "true").strip().lower() == "true"
+VOICE_REPLY_ENABLED = os.getenv("VOICE_REPLY_ENABLED", "false").strip().lower() == "true"

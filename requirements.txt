@@ -1,8 +1,12 @@
+fastapi
+uvicorn[standard]
+pydantic
 playwright
-faster-whisper
 soundcard
 numpy
-pyttsx3
 openai
 python-dotenv
 azure-cognitiveservices-speech
+pyttsx3
+
+faster-whisper
