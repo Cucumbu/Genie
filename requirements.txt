@@ -5,3 +5,4 @@ numpy
 pyttsx3
 openai
 python-dotenv
+azure-cognitiveservices-speech

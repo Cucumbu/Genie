@@ -17,6 +17,10 @@ def _resolve_chrome_path():
         return CHROME_PATH
 
     candidates = [
+        shutil.which("google-chrome"),
+        shutil.which("google-chrome-stable"),
+        shutil.which("chromium"),
+        shutil.which("chromium-browser"),
         shutil.which("chrome"),
         shutil.which("chrome.exe"),
         r"C:\Program Files\Google\Chrome\Application\chrome.exe",
